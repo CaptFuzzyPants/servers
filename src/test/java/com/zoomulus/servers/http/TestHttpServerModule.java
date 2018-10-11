@@ -12,7 +12,9 @@ public class TestHttpServerModule extends AbstractModule
     protected void configure()
     {
         bind(HttpResponder.class).to(DefaultHttpResponder.class);
+        bind(String.class).annotatedWith(Names.named(HttpServer.LISTEN_HOST_NAME))
+                .toInstance("*");
         bind(Integer.class).annotatedWith(Names.named(HttpServer.LISTEN_PORT_NAME))
-        .toInstance(ServerPort.ZoomulusPort(ServerPort.PortNumber.HTTP));
+                .toInstance(ServerPort.ZoomulusPort(ServerPort.PortNumber.HTTP));
     }
 }

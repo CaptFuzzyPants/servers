@@ -10,23 +10,19 @@ import com.zoomulus.servers.ServerPort;
 
 public class HttpServer extends BasicNettyServer
 {
+    public static final String LISTEN_HOST_NAME = "listenHost";
     public static final String LISTEN_PORT_NAME = "listenPort";
     
     @Inject
-    public HttpServer(final Injector injector, @Named(LISTEN_PORT_NAME) int port)
+    public HttpServer(final Injector injector, @Named(LISTEN_HOST_NAME) String host, @Named(LISTEN_PORT_NAME) int port)
     {
         super(HttpServerConnector.builder()
+                .host(host)
                 .port(port)
                 .injector(injector)
                 .build());
     }
-    
-    @Inject
-    public HttpServer(final ServerConnector connector)
-    {
-        super(connector);
-    }
-    
+
     public HttpServer()
     {
         super(HttpServerConnector.builder()

@@ -21,6 +21,6 @@ public final class DefaultHttpResponder extends HttpResponder
     @Override
     protected FullHttpResponse generateResponse(HttpRequest request, HttpHeaders headers)
     {
-        return createSuccessResponse("Hello from com.zoomulus.servers.HttpServer");
+        return createSuccessResponse("Hello from com.zoomulus.servers.HttpServer: " + request.getUri());
     }
 }

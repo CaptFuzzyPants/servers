@@ -1,5 +1,6 @@
 package com.zoomulus.servers;
 
+import io.netty.bootstrap.AbstractBootstrap;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelOption;
@@ -61,12 +62,25 @@ public class BasicNettyServer implements Server
                             .childHandler(connector.getChannelInitializer())
                             .option(ChannelOption.SO_BACKLOG, 128)
                             .childOption(ChannelOption.SO_KEEPALIVE, true);
-                channels.add(bootstrap.bind(connector.getPort()).sync());
+                channels.add(bind(connector, bootstrap).sync());
             }
         }
         catch (final InterruptedException e) { }
         
         log.info("Startup complete.");
+    }
+
+    private ChannelFuture bind(ServerConnector serverConnector, AbstractBootstrap bootstrap) {
+        String host = serverConnector.getHost();
+        int port = serverConnector.getPort();
+        if(host == null || "0.0.0.0".equals(host) || "*".equals(host)) {
+            log.info(String.format("Binding to port %d on all server's hostnames and IP addresses", port));
+            return bootstrap.bind(port);
+        }
+        else {
+            log.info(String.format("Binding to port %d on host %s", port, host));
+            return bootstrap.bind(host, port);
+        }
     }
 
     public void shutdown()

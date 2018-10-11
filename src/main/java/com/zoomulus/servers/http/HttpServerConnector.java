@@ -17,6 +17,7 @@ import com.zoomulus.servers.http.responder.DefaultHttpResponder;
 @Value
 public class HttpServerConnector implements ServerConnector
 {
+    String host;
     int port;
     final Optional<Injector> injector;
     
@@ -24,6 +25,28 @@ public class HttpServerConnector implements ServerConnector
     public static final String COMPRESSOR_HANDLER_NAME       = "compressor_handler";
     public static final String AGGREGATOR_HANDLER_NAME       = "aggregator_handler";
     public static final String HTTP_REQUEST_HANDLER_NAME     = "http_request_handler";
+
+    public HttpServerConnector() {
+        host = null;
+        port = -1;
+        injector = null;
+    }
+
+    private HttpServerConnector(String host, int port, Optional<Injector> injector) {
+        this.host = host;
+        this.port = port;
+        this.injector = injector;
+    }
+
+    @Override
+    public int getPort() {
+        return port;
+    }
+
+    @Override
+    public String getHost() {
+        return host;
+    }
 
     @Override
     public ChannelInitializer<?> getChannelInitializer()
@@ -47,7 +70,7 @@ public class HttpServerConnector implements ServerConnector
             }
         };
     }
-    
+
     protected boolean compress()
     {
         return false;
@@ -60,9 +83,15 @@ public class HttpServerConnector implements ServerConnector
     
     public static class HttpServerConnectorBuilder
     {
+        String _host = null;
         int _port = 8080;
         Optional<Injector> _injector = Optional.empty();
-        
+
+        public HttpServerConnectorBuilder host(String host) {
+            _host = host;
+            return this;
+        }
+
         public HttpServerConnectorBuilder port(int port)
         {
             _port = port;
@@ -77,7 +106,7 @@ public class HttpServerConnector implements ServerConnector
         
         public HttpServerConnector build()
         {
-            return new HttpServerConnector(_port, _injector);
+            return new HttpServerConnector(_host, _port, _injector);
         }
     }
 }

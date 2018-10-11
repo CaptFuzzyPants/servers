@@ -11,6 +11,9 @@ import com.zoomulus.servers.ServerConnector;
 public class EchoServerConnector implements ServerConnector
 {
     @Getter
+    String host;
+
+    @Getter
     int port;
 
     @Override
